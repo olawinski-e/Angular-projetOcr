@@ -1,7 +1,6 @@
 <div style="text-align: center;">
   <h1>Welcome to {{ title }}</h1>
 </div>
-<app-mon-premier></app-mon-premier>
 
 <div class="container">
   <div class="row">
@@ -10,7 +9,7 @@
       <p>Mis à jour : {{ lastUpdate | async | date: "d MMM y" | uppercase }}</p>
       <ul class="list-group">
         <app-appareil
-          *ngFor="let appareil of appareils"
+          *ngFor="let appareil of appareils; let if = index"
           [appareilName]="appareil.name"
           [appareilStatus]="appareil.status"
         ></app-appareil>
@@ -21,6 +20,13 @@
         (click)="onAllumer()"
       >
         Tout allumer
+      </button>
+      <button
+        class="btn btn-danger"
+        [disabled]="!isAuth"
+        (click)="onEteindre()"
+      >
+        Tout éteindre
       </button>
     </div>
   </div>

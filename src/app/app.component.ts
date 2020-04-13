@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { AppareilService } from './services/appareil.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'projet angular ocr';
   isAuth = false;
+  appareils: any[];
   lastUpdate = new Promise((resolve, reject) => {
     const date = new Date();
     setTimeout(() => {
@@ -15,28 +17,25 @@ export class AppComponent {
     }, 2000);
   });
 
-  appareils = [
-    {
-      name: 'Machine à laver',
-      status: 'eteint',
-    },
-    {
-      name: 'Frigo',
-      status: 'allume',
-    },
-    {
-      name: 'Ordinateur',
-      status: 'eteint',
-    },
-  ];
-
-  constructor() {
+  constructor(private appareilService: AppareilService) {
     setTimeout(() => {
       this.isAuth = true;
     }, 4000);
   }
 
+  ngOnInit() {
+    this.appareils = this.appareilService.appareils;
+  }
+
   onAllumer() {
-    console.log('on allume tout!');
+    this.appareilService.switchOnAll();
+  }
+
+  onEteindre() {
+    if (confirm('Etes vous sure de vouloir éteindre tous vos appareils?')) {
+      this.appareilService.switchOffAll();
+    } else {
+      return null;
+    }
   }
 }
