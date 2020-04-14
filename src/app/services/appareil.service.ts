@@ -1,36 +1,43 @@
+import { Subject } from 'rxjs';
+
 export class AppareilService {
-  appareils = [
+  appareilsSubject = new Subject<any[]>();
+
+  private appareils = [
     {
+      id: 1,
       name: 'Machine à laver',
       status: 'eteint',
     },
-    {
-      name: 'Frigo',
-      status: 'allume',
-    },
-    {
-      name: 'Ordinateur',
-      status: 'eteint',
-    },
+    { id: 2, name: 'Frigo', status: 'allume' },
+    { id: 3, name: 'Ordinateur', status: 'eteint' },
   ];
+
+  emitAppareilSubject() {
+    this.appareilsSubject.next(this.appareils.slice());
+  }
 
   switchOnAll() {
     for (let appareil of this.appareils) {
-      appareil.status = 'allume';
+      appareil.status = 'allumé';
     }
+    this.emitAppareilSubject();
   }
 
   switchOffAll() {
     for (let appareil of this.appareils) {
-      appareil.status = 'eteint';
+      appareil.status = 'éteint';
+      this.emitAppareilSubject();
     }
   }
 
   switchOnOne(i: number) {
-    this.appareils[i].status = 'allume';
+    this.appareils[i].status = 'allumé';
+    this.emitAppareilSubject();
   }
 
   switchOffOne(i: number) {
-    this.appareils[i].status = 'eteint';
+    this.appareils[i].status = 'éteint';
+    this.emitAppareilSubject();
   }
 }

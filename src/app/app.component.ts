@@ -1,41 +1,36 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppareilService } from './services/appareil.service';
+import { Observable, Subscription } from 'rxjs';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'projet angular ocr';
-  isAuth = false;
-  appareils: any[];
-  lastUpdate = new Promise((resolve, reject) => {
-    const date = new Date();
-    setTimeout(() => {
-      resolve(date);
-    }, 2000);
-  });
+  secondes: number;
+  counterSubscription: Subscription;
 
-  constructor(private appareilService: AppareilService) {
-    setTimeout(() => {
-      this.isAuth = true;
-    }, 4000);
-  }
+  constructor() {}
 
   ngOnInit() {
-    this.appareils = this.appareilService.appareils;
+    const counter = interval(1000);
+    counter.subscribe(
+      (value) => {
+        this.secondes = value;
+      },
+      (error) => {
+        console.log('Oh, an error occured! :' + error);
+      },
+      () => {
+        console.log('Observable complete');
+      }
+    );
   }
 
-  onAllumer() {
-    this.appareilService.switchOnAll();
-  }
-
-  onEteindre() {
-    if (confirm('Etes vous sure de vouloir éteindre tous vos appareils?')) {
-      this.appareilService.switchOffAll();
-    } else {
-      return null;
-    }
+  ngOnDestroy() {
+    this.counterSubscription.unsubscribe();
   }
 }
