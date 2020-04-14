@@ -26,6 +26,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuardService],
     component: SingleAppareilComponent,
   },
+  {
+    path: 'edit',
+    canActivate: [AuthGuardService],
+    component: EditAppareilComponent,
+  },
   { path: 'auth', component: AuthComponent },
   { path: '', component: AppareilViewComponent },
   { path: 'not-found', component: FourOhFourComponent },
